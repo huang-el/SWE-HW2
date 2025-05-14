@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Recipe List - Elliott's Recipes</title>
+</head>
+<body>
+  <h1>Recipes</h1>
+  <h2>Chicken Recipes</h2>
+  <ul>
+    <% chickenRecipes.forEach(recipe => { %>
+      <li>
+        <a href="/recipe/<%= recipe.id %>"><%= recipe.name %></a>
+      </li>
+    <% }); %>
+  </ul>
+
+  <h2>Beef Recipes</h2>
+  <ul>
+    <% beefRecipes.forEach(recipe => { %>
+      <li>
+        <a href="/recipe/<%= recipe.id %>"><%= recipe.name %></a>
+      </li>
+    <% }); %>
+  </ul>
+
+  <h2>Tofu Recipes</h2>
+  <ul>
+    <% tofuRecipes.forEach(recipe => { %>
+      <li>
+        <a href="/recipe/<%= recipe.id %>"><%= recipe.name %></a>
+      </li>
+    <% }); %>
+  </ul>
+
+  <a href="/add-recipe">Add a New Recipe</a>
+</body>
+</html>
