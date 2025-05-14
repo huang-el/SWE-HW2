@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= recipe.name %></title>
+</head>
+<body>
+  <h1><%= recipe.name %></h1>
+  <h2>Ingredients</h2>
+  <ul>
+    <% recipe.ingredients.forEach(ingredient => { %>
+      <li>
+        <span title="<%= ingredient.description %>"><%= ingredient.name %></span>
+      </li>
+    <% }); %>
+  </ul>
+  <h2>Instructions</h2>
+  <p><%= recipe.instructions %></p>
+  <a href="/recipes">Back to Recipe List</a>
+</body>
+</html>

@@ -43,6 +43,26 @@ app.get('/recipes', (req, res) => {
   });
 });
 
+app.get('/recipe/:id', (req, res) => {
+  const recipeId = req.params.id;
+
+  // fetch the recipe details by ID
+  db.query('SELECT * FROM recipes WHERE id = ?', [recipeId], (err, results) => {
+    if (err) throw err;
+
+    const recipe = results[0];
+
+    // fetch ingredients for this recipe
+    db.query('SELECT * FROM ingredients WHERE id IN (?)', [recipe.ingredient_id], (err, ingredients) => {
+      if (err) throw err;
+      
+      res.render('recipe', {
+        recipe: { ...recipe, ingredients }
+      });
+    });
+  });
+});
+
 
 
 app.listen(3000, () => {
