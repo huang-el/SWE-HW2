@@ -3,11 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <title>Add Recipe - Elliott's Recipes</title>
+
+  <!-- check if all fields are filled -->
+  <script>
+    function validateForm() {
+      const name = document.getElementById('name').value;
+      const proteinType = document.getElementById('protein_type').value;
+      const ingredients = document.getElementById('ingredients').selectedOptions;
+      const instructions = document.getElementById('instructions').value;
+      let isValid = true;
+      let errorMessage = '';
+
+      if (!name || !proteinType || !instructions || ingredients.length === 0) {
+        isValid = false;
+        errorMessage = 'Please fill in all fields and select at least one ingredient.';
+      }
+
+      if (!isValid) {
+        alert(errorMessage);
+      }
+
+      return isValid;
+    }
+  </script>
 </head>
 <body>
   <h1>Add New Recipe</h1>
 
-  <form action="/addRecipe" method="POST">
+  <form action="/addRecipe" method="POST" onsubmit="return validateForm()">
     <label for="name">Recipe Name:</label>
     <input type="text" id="name" name="name" required><br><br>
 
