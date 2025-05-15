@@ -115,6 +115,27 @@ app.post('/addRecipe', (req, res) => {
 });
 
 
+// render add ingredient page
+app.get('/addIngredient', (req, res) => {
+  res.render('addIngredient');
+});
+
+
+// handle the POST request for adding a new ingredient
+app.post('/addIngredient', (req, res) => {
+  const { name, description } = req.body;
+
+  db.query('INSERT INTO ingredients (name, description) VALUES (?, ?)', [name, description], (err, result) => {
+    if (err) {
+      console.error('Error inserting ingredient: ' + err.stack);
+      return res.status(500).send('Server error');
+    }
+
+    // redirect to add recipe page
+    res.redirect('/addRecipe');
+  });
+});
+
 
 app.listen(3000, () => {
   console.log('Server running on port 3000');
