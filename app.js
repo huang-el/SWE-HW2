@@ -43,6 +43,7 @@ app.get('/recipes', (req, res) => {
   });
 });
 
+// individual recipe page
 app.get('/recipe/:id', (req, res) => {
   const recipeId = req.params.id;
 
@@ -53,13 +54,58 @@ app.get('/recipe/:id', (req, res) => {
     const recipe = results[0];
 
     // fetch ingredients for this recipe
-    db.query('SELECT * FROM ingredients WHERE id IN (?)', [recipe.ingredient_id], (err, ingredients) => {
+    db.query(`
+      SELECT ingredients.*
+      FROM ingredients
+      JOIN recipe_ingredients ON ingredients.id = recipe_ingredients.ingredient_id
+      WHERE recipe_ingredients.recipe_id = ?
+    `, [recipeId], (err, ingredients) => {
       if (err) throw err;
-      
+
       res.render('recipe', {
         recipe: { ...recipe, ingredients }
       });
     });
+  });
+});
+
+// get-route fetches all ingredients from database and renders form
+app.get('/addRecipe', (req, res) => {
+  db.query('SELECT * FROM ingredients', (err, results) => {
+    if (err) {
+      console.error('Error fetching ingredients: ' + err.stack);
+      return res.status(500).send('Server error');
+    }
+    res.render('addRecipe', { ingredients: results });
+  });
+});
+
+
+// post-route inserts new recipe into recipes table and associates the
+// selected ingredients using join table recipe_ingredients
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.post('/addRecipe', (req, res) => {
+  const { name, protein_type, ingredients, instructions } = req.body;
+
+  db.query('INSERT INTO recipes (name, protein_type, instructions) VALUES (?, ?, ?)', [name, protein_type, instructions], (err, result) => {
+    if (err) {
+      console.error('Error inserting recipe: ' + err.stack);
+      return res.status(500).send('Server error');
+    }
+
+    const recipeId = result.insertId;
+
+    ingredients.forEach(ingredientId => {
+      db.query('INSERT INTO recipe_ingredients (recipe_id, ingredient_id) VALUES (?, ?)', [recipeId, ingredientId], (err) => {
+        if (err) {
+          console.error('Error inserting recipe-ingredient relation: ' + err.stack);
+        }
+      });
+    });
+
+    res.redirect('/recipes');
   });
 });
 
