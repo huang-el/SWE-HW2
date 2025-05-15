@@ -38,6 +38,15 @@
     <% }); %>
   </ul>
 
+  <h2>Pork Recipes</h2>
+  <ul>
+    <% porkRecipes.forEach(recipe => { %>
+      <li>
+        <a href="/recipe/<%= recipe.id %>"><%= recipe.name %></a>
+      </li>
+    <% }); %>
+  </ul>
+
   <h2>Beef Recipes</h2>
   <ul>
     <% beefRecipes.forEach(recipe => { %>
